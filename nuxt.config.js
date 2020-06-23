@@ -50,7 +50,12 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost/api',
+    headers: {
+      Authorization: 'Bearer [token]', // put token
+    },
+  },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/

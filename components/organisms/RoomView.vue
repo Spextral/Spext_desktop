@@ -9,6 +9,7 @@
 <script>
 // import { mapState } from 'vuex'
 // import LoadingPanel from '~/components/atoms/LoadingPanel'
+// import axios from 'axios'
 
 export default {
   // components: {
@@ -26,8 +27,9 @@ export default {
   //   ...mapState('room', ['rooms']),
   // },
   // async created() {
-  //   await this.$store.dispatch('room/fetchRooms')
-  //   this.loading = false
+  //   // await this.$store.dispatch('room/fetchRooms')
+  //   // this.loading = false
+  //   console.log((await this.$axios.$get('/rooms')).data)
   // },
   // methods: {
   //   async openRoomNamePrompt() {
