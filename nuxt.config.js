@@ -24,7 +24,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    '@fortawesome/fontawesome-free/css/all.css',
+  ],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -53,7 +56,8 @@ export default {
   axios: {
     baseURL: 'http://localhost/api',
     headers: {
-      Authorization: 'Bearer [token]', // put token
+      Authorization:
+        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE1OTMwNTk1NDUsImV4cCI6MjIwODQxOTU0NSwibmJmIjoxNTkzMDU5NTQ1LCJqdGkiOiJDWXBCdGI4UkJEc2hUd0ZtIiwic3ViIjoxLCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.55vfQePE1kgkMJnZJbJ4xX9mAjZJd8ZBxUDk1ntFrsc', // put token
     },
   },
   /*
