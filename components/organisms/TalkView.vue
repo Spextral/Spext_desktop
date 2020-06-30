@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div v-if="roomId">
+    <loading-panel v-if="loading" />
     <div class="comments-container">
       <div v-for="comment in comments" :key="comment.id" class="comment">
         <div class="comment-body">
@@ -20,19 +21,13 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
+import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  // props: {
-  //   users: {
-  //     type: Array,
-  //     required: true,
-  //   },
-  //   selfIcon: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
+  components: {
+    LoadingPanel,
+  },
   data() {
     return {
       comments: [
@@ -40,28 +35,27 @@ export default {
         { comment: 'b', id: '1' },
       ],
       newComment: '',
+      loading: true,
     }
   },
-  // computed: {
-  //   user() {
-  //     return id => this.users.find(user => user.id === id)
-  //   },
-  //   circleStyle() {
-  //     return icon => ({ backgroundImage: `url(${icon})` })
-  //   },
-  // },
+  computed: {
+    ...mapState('room', ['roomId']),
+    // user() {
+    //   return id => this.users.find(user => user.id === id)
+    // },
+    // circleStyle() {
+    //   return icon => ({ backgroundImage: `url(${icon})` })
+    // },
+  },
+  created() {
+    this.loading = false
+  },
   methods: {
     submitComment() {
-      // const roomId = this.file.roomId
       const message = this.commitComment
       if (message) {
         // eslint-disable-next-line
         console.log(message)
-        // const commitId = await this.$store.dispatch('file/saveCommitFile', {
-        //   roomId,
-        //   fileId,
-        //   extname,
-        // })
         // await this.$store.dispatch('file/addCommit', {
         //   roomId,
         //   fileId,

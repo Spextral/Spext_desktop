@@ -1,9 +1,10 @@
 import { ROLE_TYPES } from '../utils/roleTypes'
+const FormData = require('form-data')
 
 export const state = () => ({
   rooms: null,
   // roomInfoList: {},
-  // roomId: null,
+  roomId: null,
 })
 
 // export const getters = {
@@ -20,13 +21,9 @@ export const mutations = {
   //     [roomInfo.id]: roomInfo,
   //   }
   // },
-  // setRoomId(state, roomId) {
-  //   state.roomId = roomId
-  // },
-  // toggleOpening(state, roomId) {
-  //   const openingRoom = state.rooms.find(room => room.id === roomId)
-  //   openingRoom.open = !openingRoom.open
-  // },
+  setRoomId(state, roomId) {
+    state.roomId = roomId
+  },
 }
 
 export const actions = {
@@ -41,29 +38,32 @@ export const actions = {
 
   async createRoom({ dispatch }, name) {
     const room = (await this.$axios.post('/room', { name })).data
-    const params = { userId: 1, roomId: room.id, role: ROLE_TYPES[0].id } // 自分のユーザー情報をどう取ってくるか
-    await this.$axios.post(`/room/${room.id}/members`, params)
+    const roomId = room.id
+    const params = { userId: 1, roomId, role: ROLE_TYPES[0].id } // 自分のユーザー情報をどう取ってくるか
+    await this.$axios.post(`/room/${roomId}/members`, params)
+    const form = new FormData()
+    form.append('extname', 'pdf')
+    form.append('name', 'a')
+    // const fileandhash = (
+    await this.$axios.post(`/room/${roomId}/file`, form)
+    // ).data
     await dispatch('fetchRooms')
     return room
   },
 
-  // async createNew({ dispatch }, params) {
-  //   const item = await this.$ipc(CREATE_NEW, params)
-  //   await dispatch('fetchRoomInfo', params.roomId)
-  //   return item
-  // },
-
-  // async dropFile({ dispatch }, params) {
+  // async addComment({ state, dispatch }, params) {
+  //   const roomId = state.roomId
   //   const item = await this.$ipc(DROP_FILE, params)
-  //   await dispatch('fetchRoomInfo', params.roomId)
+  //   const fileId = item.file.id
+  //   const commitId = item.commitId
+  //   await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment: item.commit.message })
+  //   await dispatch('fetchRoomInfo', roomId)
   //   return item
   // },
 
-  // getRoomId({ commit }, roomId) {
-  //   commit('setRoomId', roomId)
-  // },
-  // async deleteFileInRoom({ dispatch }, { roomId, fileId }) {
-  //   await this.$ipc(DELETE_FILE_IN_ROOM, { roomId, fileId })
-  //   await dispatch('fetchRoomInfo', roomId)
-  // },
+  setRoomId({ commit }, roomId) {
+    // eslint-disable-next-line
+    // console.log(roomId)
+    commit('setRoomId', roomId)
+  },
 }

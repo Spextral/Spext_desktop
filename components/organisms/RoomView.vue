@@ -8,7 +8,12 @@
         @click="openRoomNamePrompt"
       />
     </div>
-    <div v-for="room in rooms" :key="room.id" class="room">
+    <div
+      v-for="room in rooms"
+      :key="room.id"
+      class="room"
+      @click="enterRoom(room.id)"
+    >
       <span>{{ room.name }}</span>
     </div>
   </div>
@@ -49,17 +54,12 @@ export default {
 
       if (!value) return
 
-      // const room =
-      await this.$store.dispatch('room/createRoom', value)
-      // await this.enterRoom(room.id)
+      const room = await this.$store.dispatch('room/createRoom', value)
+      this.enterRoom(room.id)
     },
-    //   async enterRoom(roomId) {
-    //     await this.$store.dispatch('tab/changeTabType', {
-    //       id: this.currentTabId,
-    //       type: TAB_TYPES.FOLDER,
-    //       values: { roomId, folder: '' },
-    //     })
-    //   },
+    enterRoom(roomId) {
+      this.$store.dispatch('room/setRoomId', roomId)
+    },
   },
 }
 </script>

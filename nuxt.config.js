@@ -56,8 +56,7 @@ export default {
   axios: {
     baseURL: 'http://localhost/api',
     headers: {
-      Authorization:
-        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE1OTMwNTk1NDUsImV4cCI6MjIwODQxOTU0NSwibmJmIjoxNTkzMDU5NTQ1LCJqdGkiOiJDWXBCdGI4UkJEc2hUd0ZtIiwic3ViIjoxLCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.55vfQePE1kgkMJnZJbJ4xX9mAjZJd8ZBxUDk1ntFrsc', // put token
+      Authorization: 'Bearer [token]', // put token
     },
   },
   /*
