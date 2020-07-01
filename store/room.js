@@ -3,24 +3,24 @@ const FormData = require('form-data')
 
 export const state = () => ({
   rooms: null,
-  // roomInfoList: {},
+  roomInfoList: {},
   roomId: null,
 })
 
-// export const getters = {
-//   roomInfo: state => roomId => state.roomInfoList[roomId],
-// }
+export const getters = {
+  roomInfo: (state) => (roomId) => state.roomInfoList[roomId],
+}
 
 export const mutations = {
   setRooms(state, rooms) {
     state.rooms = rooms
   },
-  // setRoomInfo(state, roomInfo) {
-  //   state.roomInfoList = {
-  //     ...state.roomInfoList,
-  //     [roomInfo.id]: roomInfo,
-  //   }
-  // },
+  setRoomInfo(state, roomInfo) {
+    state.roomInfoList = {
+      ...state.roomInfoList,
+      [roomInfo.id]: roomInfo,
+    }
+  },
   setRoomId(state, roomId) {
     state.roomId = roomId
   },
@@ -32,9 +32,9 @@ export const actions = {
     commit('setRooms', rooms)
   },
 
-  // async fetchRoomInfo({ commit }, roomId) {
-  //   commit('setRoomInfo', await this.$ipc(FETCH_ROOM_INFO, roomId))
-  // },
+  async fetchRoomInfo({ commit }, roomId) {
+    commit('setRoomInfo', (await this.$axios.get(`/room/${roomId}`)).data)
+  },
 
   async createRoom({ dispatch }, name) {
     const room = (await this.$axios.post('/room', { name })).data
@@ -44,9 +44,7 @@ export const actions = {
     const form = new FormData()
     form.append('extname', 'pdf')
     form.append('name', 'a')
-    // const fileandhash = (
     await this.$axios.post(`/room/${roomId}/file`, form)
-    // ).data
     await dispatch('fetchRooms')
     return room
   },
@@ -61,9 +59,8 @@ export const actions = {
   //   return item
   // },
 
-  setRoomId({ commit }, roomId) {
-    // eslint-disable-next-line
-    // console.log(roomId)
+  async setRoomId({ commit, dispatch }, roomId) {
     commit('setRoomId', roomId)
+    await dispatch('fetchRoomInfo', roomId)
   },
 }

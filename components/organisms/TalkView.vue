@@ -1,6 +1,6 @@
 <template>
   <div v-if="roomId">
-    <loading-panel v-if="loading" />
+    <!-- <loading-panel v-if="loading" /> -->
     <div class="comments-container">
       <div v-for="comment in comments" :key="comment.id" class="comment">
         <div class="comment-body">
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import LoadingPanel from '~/components/atoms/LoadingPanel'
+import { mapState, mapGetters } from 'vuex'
+// import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  components: {
-    LoadingPanel,
-  },
+  // components: {
+  //   LoadingPanel,
+  // },
   data() {
     return {
       comments: [
@@ -35,11 +35,18 @@ export default {
         { comment: 'b', id: '1' },
       ],
       newComment: '',
-      loading: true,
+      // loading: true,
     }
   },
   computed: {
     ...mapState('room', ['roomId']),
+    ...mapGetters('room', ['roomInfo']),
+    ...mapGetters('file', ['currentCommitId']),
+    fileId() {
+      return this.roomInfo(this.roomId)
+        ? this.roomInfo(this.roomId).items[0].id
+        : null
+    },
     // user() {
     //   return id => this.users.find(user => user.id === id)
     // },
@@ -47,9 +54,9 @@ export default {
     //   return icon => ({ backgroundImage: `url(${icon})` })
     // },
   },
-  created() {
-    this.loading = false
-  },
+  // mounted() {
+  //   this.loading = false
+  // },
   methods: {
     submitComment() {
       const message = this.commitComment

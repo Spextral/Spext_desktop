@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
@@ -34,6 +34,7 @@ export default {
   },
   computed: {
     ...mapState('room', ['rooms']),
+    ...mapGetters('room', ['roomInfo']),
   },
   async created() {
     await this.$store.dispatch('room/fetchRooms')
@@ -57,8 +58,13 @@ export default {
       const room = await this.$store.dispatch('room/createRoom', value)
       this.enterRoom(room.id)
     },
-    enterRoom(roomId) {
-      this.$store.dispatch('room/setRoomId', roomId)
+    async enterRoom(roomId) {
+      await this.$store.dispatch('room/setRoomId', roomId)
+      const fileId = this.roomInfo(roomId).items[0].id
+      this.$store.dispatch('file/fetchFile', {
+        roomId,
+        fileId,
+      })
     },
   },
 }
