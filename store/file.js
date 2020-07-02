@@ -39,9 +39,16 @@ export const actions = {
   // async editFile(store, params) {
   //   await this.$ipc(EDIT_FILE, params)
   // },
-  // async addComment(store, { roomId, fileId, commitId, userId, comment }) {
-  //   await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, userId, comment })
-  // },
+  async addComment(
+    { dispatch },
+    { roomId, fileId, commitId, userId, comment }
+  ) {
+    await this.$axios.post(
+      `room/${roomId}/file/${fileId}/commit/${commitId}/comment`,
+      { userId, comment }
+    )
+    await dispatch('fetchFile', { roomId, fileId })
+  },
   // async watchComment(store, { roomId, fileId, commitId, commentId, userId }) {
   //   await this.$ipc(WATCH_COMMENT, {
   //     roomId,

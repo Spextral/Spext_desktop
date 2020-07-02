@@ -1,10 +1,14 @@
 <template>
   <div v-if="roomId">
     <!-- <loading-panel v-if="loading" /> -->
-    <div class="comments-container">
-      <div v-for="comment in comments" :key="comment.id" class="comment">
+    <div v-if="file(fileId)" class="comments-container">
+      <div
+        v-for="comment in file(fileId).commits[0].comments"
+        :key="comment.id"
+        class="comment"
+      >
         <div class="comment-body">
-          <div class="comment-message">{{ comment.comment }}</div>
+          <div class="comment-message">{{ comment.content }}</div>
         </div>
       </div>
     </div>
@@ -41,7 +45,7 @@ export default {
   computed: {
     ...mapState('room', ['roomId']),
     ...mapGetters('room', ['roomInfo']),
-    ...mapGetters('file', ['currentCommitId']),
+    ...mapGetters('file', ['file', 'currentCommitId']),
     fileId() {
       return this.roomInfo(this.roomId)
         ? this.roomInfo(this.roomId).items[0].id
@@ -58,23 +62,17 @@ export default {
   //   this.loading = false
   // },
   methods: {
-    submitComment() {
-      const message = this.commitComment
+    async submitComment() {
+      const message = this.newComment
       if (message) {
-        // eslint-disable-next-line
-        console.log(message)
-        // await this.$store.dispatch('file/addCommit', {
-        //   roomId,
-        //   fileId,
-        //   id: commitId,
-        //   message,
-        //   userId: this.$store.state.user.id,
-        // })
-        // await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
-        // await this.$store.dispatch('file/fetchFile', { roomId, fileId })
-        // this.commitComment = ''
-        // this.$set(this.showcomments, this.currentCommit.id, true)
-        // this.change_viewingCommit(this.currentCommit.id)
+        await this.$store.dispatch('file/addComment', {
+          roomId: this.roomId,
+          fileId: this.fileId,
+          commitId: this.currentCommitId(this.fileId),
+          userId: this.$store.state.user.id,
+          comment: message,
+        })
+        this.newComment = ''
       }
     },
     // Warning(warningText) {
