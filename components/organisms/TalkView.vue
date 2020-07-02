@@ -20,6 +20,7 @@
           placeholder="Input comment..."
         />
       </form>
+      <el-button @click="toggleMichrophone">マイク</el-button>
     </div>
   </div>
 </template>
@@ -33,12 +34,34 @@ export default {
   //   LoadingPanel,
   // },
   data() {
+    // eslint-disable-next-line
+    const speech = new window.webkitSpeechRecognition()
+    speech.lang = 'ja-JP'
+    speech.onresult = async (e) => {
+      speech.stop()
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (!e.results[i].isFinal) continue
+        const { transcript } = e.results[i][0]
+        if (transcript) {
+          await this.$store.dispatch('file/addComment', {
+            roomId: this.roomId,
+            fileId: this.fileId,
+            commitId: this.currentCommitId(this.fileId),
+            userId: this.$store.state.user.id,
+            comment: transcript,
+          })
+        }
+      }
+    }
+    speech.onend = () => {
+      if (this.michrophoneEnabled) {
+        speech.start()
+      }
+    }
     return {
-      comments: [
-        { comment: 'a', id: '0' },
-        { comment: 'b', id: '1' },
-      ],
       newComment: '',
+      michrophoneEnabled: false,
+      speech,
       // loading: true,
     }
   },
@@ -73,6 +96,18 @@ export default {
           comment: message,
         })
         this.newComment = ''
+      }
+    },
+    toggleMichrophone() {
+      this.michrophoneEnabled = !this.michrophoneEnabled
+      if (this.michrophoneEnabled) {
+        this.speech.start()
+        // eslint-disable-next-line
+        console.log('start')
+      } else {
+        this.speech.stop()
+        // eslint-disable-next-line
+        console.log('stop')
       }
     },
     // Warning(warningText) {
