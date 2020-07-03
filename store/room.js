@@ -1,5 +1,4 @@
 import { ROLE_TYPES } from '../utils/roleTypes'
-const FormData = require('form-data')
 
 export const state = () => ({
   rooms: null,
@@ -33,34 +32,57 @@ export const actions = {
   },
 
   async fetchRoomInfo({ commit }, roomId) {
-    commit('setRoomInfo', (await this.$axios.get(`/room/${roomId}`)).data)
+    const [members, comments] = await Promise.all([
+      this.$axios.get(`/room/${roomId}/members`),
+      this.$axios.get(`/room/${roomId}/comment`),
+    ])
+    // const roomInfo = {
+    //   id: roomId,
+    //   members: members.data,
+    //   comments: comments.data,
+    // }
+    commit('setRoomInfo', {
+      id: roomId,
+      members: members.data,
+      comments: comments.data,
+    })
   },
 
-  async createRoom({ dispatch }, name) {
+  async createRoom({ dispatch }, { userId, name }) {
     const room = (await this.$axios.post('/room', { name })).data
     const roomId = room.id
-    const params = { userId: 1, roomId, role: ROLE_TYPES[0].id } // 自分のユーザー情報をどう取ってくるか
-    await this.$axios.post(`/room/${roomId}/members`, params)
-    const form = new FormData()
-    form.append('extname', 'pdf')
-    form.append('name', 'a')
-    await this.$axios.post(`/room/${roomId}/file`, form)
-    await dispatch('fetchRooms')
+    const params = {
+      userId,
+      role: ROLE_TYPES[0].id,
+    } // 自分のユーザー情報をどう取ってくるか
+    this.$axios.post(`/room/${roomId}/members`, params)
+    dispatch('fetchRooms')
     return room
   },
 
-  // async addComment({ state, dispatch }, params) {
-  //   const roomId = state.roomId
-  //   const item = await this.$ipc(DROP_FILE, params)
-  //   const fileId = item.file.id
-  //   const commitId = item.commitId
-  //   await this.$ipc(ADD_COMMENT, { roomId, fileId, commitId, comment: item.commit.message })
-  //   await dispatch('fetchRoomInfo', roomId)
-  //   return item
-  // },
+  addComment({ state, dispatch, getters, commit }, { userId, comment }) {
+    const roomId = state.roomId
+    const roomInfo = Object.assign({}, getters.roomInfo(roomId))
+    const comments = roomInfo.comments
+    roomInfo.comments = [
+      ...comments,
+      {
+        content: comment,
+        id: comments.length
+          ? comments[comments.length - 1].id + 1 + '_temp'
+          : '1_temp',
+        roomId,
+        userId,
+      },
+    ]
+    commit('setRoomInfo', roomInfo)
+    this.$axios.post(`/room/${roomId}/comment`, { comment }).then((value) => {
+      dispatch('fetchRoomInfo', roomId)
+    })
+  },
 
-  async setRoomId({ commit, dispatch }, roomId) {
+  setRoomId({ commit, dispatch }, roomId) {
     commit('setRoomId', roomId)
-    await dispatch('fetchRoomInfo', roomId)
+    dispatch('fetchRoomInfo', roomId)
   },
 }

@@ -1,9 +1,9 @@
 <template>
   <div v-if="roomId">
     <!-- <loading-panel v-if="loading" /> -->
-    <div v-if="file(fileId)" class="comments-container">
+    <div v-if="roomInfo(roomId)" class="comments-container">
       <div
-        v-for="comment in file(fileId).commits[0].comments"
+        v-for="comment in roomInfo(roomId).comments"
         :key="comment.id"
         class="comment"
       >
@@ -37,17 +37,13 @@ export default {
     // eslint-disable-next-line
     const speech = new window.webkitSpeechRecognition()
     speech.lang = 'ja-JP'
-    speech.onresult = async (e) => {
+    speech.onresult = (e) => {
       speech.stop()
       for (let i = e.resultIndex; i < e.results.length; i++) {
         if (!e.results[i].isFinal) continue
         const { transcript } = e.results[i][0]
         if (transcript) {
-          await this.$store.dispatch('file/addComment', {
-            roomId: this.roomId,
-            fileId: this.fileId,
-            commitId: this.currentCommitId(this.fileId),
-            userId: this.$store.state.user.id,
+          this.$store.dispatch('room/addComment', {
             comment: transcript,
           })
         }
@@ -67,13 +63,8 @@ export default {
   },
   computed: {
     ...mapState('room', ['roomId']),
+    ...mapState('user', ['id']),
     ...mapGetters('room', ['roomInfo']),
-    ...mapGetters('file', ['file', 'currentCommitId']),
-    fileId() {
-      return this.roomInfo(this.roomId)
-        ? this.roomInfo(this.roomId).items[0].id
-        : null
-    },
     // user() {
     //   return id => this.users.find(user => user.id === id)
     // },
@@ -85,14 +76,11 @@ export default {
   //   this.loading = false
   // },
   methods: {
-    async submitComment() {
+    submitComment() {
       const message = this.newComment
       if (message) {
-        await this.$store.dispatch('file/addComment', {
-          roomId: this.roomId,
-          fileId: this.fileId,
-          commitId: this.currentCommitId(this.fileId),
-          userId: this.$store.state.user.id,
+        this.$store.dispatch('room/addComment', {
+          userId: this.id,
           comment: message,
         })
         this.newComment = ''

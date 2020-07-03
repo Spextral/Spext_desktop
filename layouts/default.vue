@@ -4,6 +4,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  middleware: ['fetchData'],
+}
+</script>
+
 <style>
 @import '@/assets/styles/common.css';
 </style>

@@ -34,6 +34,7 @@ export default {
   },
   computed: {
     ...mapState('room', ['rooms']),
+    ...mapState('user', ['id']),
     ...mapGetters('room', ['roomInfo']),
   },
   async created() {
@@ -55,16 +56,14 @@ export default {
 
       if (!value) return
 
-      const room = await this.$store.dispatch('room/createRoom', value)
+      const room = await this.$store.dispatch('room/createRoom', {
+        userId: this.id,
+        name: value,
+      })
       this.enterRoom(room.id)
     },
-    async enterRoom(roomId) {
-      await this.$store.dispatch('room/setRoomId', roomId)
-      const fileId = this.roomInfo(roomId).items[0].id
-      this.$store.dispatch('file/fetchFile', {
-        roomId,
-        fileId,
-      })
+    enterRoom(roomId) {
+      this.$store.dispatch('room/setRoomId', roomId)
     },
   },
 }
