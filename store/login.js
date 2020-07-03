@@ -26,10 +26,12 @@ export const actions = {
     console.log('二段階認証用。emailの確認を要求する。7/2現時点ではなし。')
     // return this.$ipc(PRELOGIN, email)
   },
-  login(store, { email, password }) {
+  async login(store, { email, password }) {
+    const token = (await this.$axios.post('/auth/login', { email, password }))
+      .data.access_token
+    localStorage.setItem('token', JSON.stringify(token))
     // eslint-disable-next-line
-    console.log('tokenを取得しcookieに保存')
-    // const token = (await axios.post('/auth/login', { email, password })).data.access_token
+    console.log('tokenを取得しcookieに保存',token)
     // return this.$ipc(LOGIN, { email, password })
   },
 }
