@@ -9,14 +9,9 @@
 // import SideMenu from '~/components/molecules/SideMenu'
 // import FileTab from '~/components/organisms/FileTab'
 
-// export default {
-//   middleware: ['isLogin', 'fetchData'],
-//   components: {
-//     TitleBar,
-//     SideMenu,
-//     FileTab,
-//   },
-// }
+export default {
+  middleware: ['isLogin'],
+}
 </script>
 
 <style>
