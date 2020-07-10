@@ -1,3 +1,6 @@
+require('dotenv').config()
+const { API_BASE_URL } = process.env
+
 export default {
   /*
    ** Nuxt rendering mode
@@ -24,7 +27,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    '@fortawesome/fontawesome-free/css/all.css',
+  ],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -50,17 +56,14 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {
-    baseURL: 'http://localhost/api',
-    headers: {
-      Authorization: 'Bearer ', // put token
-    },
-  },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
     transpile: [/^element-ui/],
+  },
+  env: {
+    API_BASE_URL,
   },
 }

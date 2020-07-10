@@ -1,58 +1,71 @@
 <template>
   <div>
-    <div v-for="room in rooms" :key="room.id" class="room">
+    <loading-panel v-if="loading" />
+    <div class="controls room">
+      <i
+        class="fas fa-folder-plus"
+        title="Create new room"
+        @click="openRoomNamePrompt"
+      />
+    </div>
+    <div
+      v-for="room in rooms"
+      :key="room.id"
+      class="room"
+      @click="enterRoom(room.id)"
+    >
       <span>{{ room.name }}</span>
     </div>
   </div>
 </template>
 
 <script>
-// import { mapState } from 'vuex'
-// import LoadingPanel from '~/components/atoms/LoadingPanel'
-// import axios from 'axios'
+import { mapState, mapGetters } from 'vuex'
+import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  // components: {
-  //   LoadingPanel,
-  // },
+  components: {
+    LoadingPanel,
+  },
   data() {
     return {
-      rooms: [
-        { name: 'test1', id: '1' },
-        { name: 'test2', id: '2' },
-      ],
+      loading: true,
     }
   },
-  // computed: {
-  //   ...mapState('room', ['rooms']),
-  // },
-  async created() {
-    // await this.$store.dispatch('room/fetchRooms')
-    // this.loading = false
-    // console.log((await this.$axios.$get('/room')).data)
+  computed: {
+    ...mapState('room', ['rooms']),
+    ...mapState('user', ['id']),
+    ...mapGetters('room', ['roomInfo']),
   },
-  // methods: {
-  //   async openRoomNamePrompt() {
-  //     const { value } = await this.$prompt('Please input name', 'Create new room', {
-  //       confirmButtonText: 'OK',
-  //       cancelButtonText: 'Cancel',
-  //       inputPattern: /^[a-z0-9]{3,20}$/,
-  //       inputErrorMessage: 'Invalid name',
-  //     }).catch(() => ({}))
+  async created() {
+    await this.$store.dispatch('room/fetchRooms')
+    this.loading = false
+  },
+  methods: {
+    async openRoomNamePrompt() {
+      const { value } = await this.$prompt(
+        'Please input name',
+        'Create new room',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          inputPattern: /^[a-z0-9]{3,20}$/,
+          inputErrorMessage: 'Invalid name',
+        }
+      ).catch(() => ({}))
 
-  //     if (!value) return
+      if (!value) return
 
-  //     const room = await this.$store.dispatch('room/createRoom', value)
-  //     await this.enterRoom(room.id)
-  //   },
-  //   async enterRoom(roomId) {
-  //     await this.$store.dispatch('tab/changeTabType', {
-  //       id: this.currentTabId,
-  //       type: TAB_TYPES.FOLDER,
-  //       values: { roomId, folder: '' },
-  //     })
-  //   },
-  // },
+      const room = await this.$store.dispatch('room/createRoom', {
+        userId: this.id,
+        name: value,
+      })
+      this.enterRoom(room.id)
+    },
+    enterRoom(roomId) {
+      this.$store.dispatch('room/setRoomId', roomId)
+    },
+  },
 }
 </script>
 
@@ -66,5 +79,13 @@ export default {
   cursor: pointer;
   transition: 0.2s color, background-color ease;
   position: relative;
+}
+.controls {
+  text-align: right;
+  padding: 8px 20px;
+}
+.controls .i {
+  cursor: pointer;
+  font-size: 16px;
 }
 </style>

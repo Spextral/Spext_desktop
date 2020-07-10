@@ -5,12 +5,8 @@
 </template>
 
 <script>
-// import TitleBar from '~/components/molecules/TitleBar'
-// import SideMenu from '~/components/molecules/SideMenu'
-// import FileTab from '~/components/organisms/FileTab'
-
 export default {
-  middleware: ['isLogin'],
+  middleware: ['isLogin', 'fetchData'],
 }
 </script>
 

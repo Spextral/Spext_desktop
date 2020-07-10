@@ -1,9 +1,14 @@
 <template>
-  <div>
-    <div class="comments-container">
-      <div v-for="comment in comments" :key="comment.id" class="comment">
+  <div v-if="roomId">
+    <!-- <loading-panel v-if="loading" /> -->
+    <div v-if="roomInfo(roomId)" class="comments-container">
+      <div
+        v-for="comment in roomInfo(roomId).comments"
+        :key="comment.id"
+        class="comment"
+      >
         <div class="comment-body">
-          <div class="comment-message">{{ comment.comment }}</div>
+          <div class="comment-message">{{ comment.content }}</div>
         </div>
       </div>
     </div>
@@ -15,65 +20,82 @@
           placeholder="Input comment..."
         />
       </form>
+      <el-button @click="toggleMichrophone">マイク</el-button>
     </div>
   </div>
 </template>
 
 <script>
-// import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+// import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  // props: {
-  //   users: {
-  //     type: Array,
-  //     required: true,
-  //   },
-  //   selfIcon: {
-  //     type: String,
-  //     required: true,
-  //   },
+  // components: {
+  //   LoadingPanel,
   // },
   data() {
+    // eslint-disable-next-line
+    const speech = new window.webkitSpeechRecognition()
+    speech.lang = 'ja-JP'
+    speech.onresult = (e) => {
+      speech.stop()
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (!e.results[i].isFinal) continue
+        const { transcript } = e.results[i][0]
+        if (transcript) {
+          this.$store.dispatch('room/addComment', {
+            comment: transcript,
+          })
+        }
+      }
+    }
+    speech.onend = () => {
+      if (this.michrophoneEnabled) {
+        speech.start()
+      }
+    }
     return {
-      comments: [
-        { comment: 'a', id: '0' },
-        { comment: 'b', id: '1' },
-      ],
       newComment: '',
+      michrophoneEnabled: false,
+      speech,
+      // loading: true,
     }
   },
-  // computed: {
-  //   user() {
-  //     return id => this.users.find(user => user.id === id)
-  //   },
-  //   circleStyle() {
-  //     return icon => ({ backgroundImage: `url(${icon})` })
-  //   },
+  computed: {
+    ...mapState('room', ['roomId']),
+    ...mapState('user', ['id']),
+    ...mapGetters('room', ['roomInfo']),
+    // user() {
+    //   return id => this.users.find(user => user.id === id)
+    // },
+    // circleStyle() {
+    //   return icon => ({ backgroundImage: `url(${icon})` })
+    // },
+  },
+  // mounted() {
+  //   this.loading = false
   // },
   methods: {
     submitComment() {
-      // const roomId = this.file.roomId
-      const message = this.commitComment
+      const message = this.newComment
       if (message) {
+        this.$store.dispatch('room/addComment', {
+          userId: this.id,
+          comment: message,
+        })
+        this.newComment = ''
+      }
+    },
+    toggleMichrophone() {
+      this.michrophoneEnabled = !this.michrophoneEnabled
+      if (this.michrophoneEnabled) {
+        this.speech.start()
         // eslint-disable-next-line
-        console.log(message)
-        // const commitId = await this.$store.dispatch('file/saveCommitFile', {
-        //   roomId,
-        //   fileId,
-        //   extname,
-        // })
-        // await this.$store.dispatch('file/addCommit', {
-        //   roomId,
-        //   fileId,
-        //   id: commitId,
-        //   message,
-        //   userId: this.$store.state.user.id,
-        // })
-        // await this.$store.dispatch('deleteTmpInfo', { fileId, extname })
-        // await this.$store.dispatch('file/fetchFile', { roomId, fileId })
-        // this.commitComment = ''
-        // this.$set(this.showcomments, this.currentCommit.id, true)
-        // this.change_viewingCommit(this.currentCommit.id)
+        console.log('start')
+      } else {
+        this.speech.stop()
+        // eslint-disable-next-line
+        console.log('stop')
       }
     },
     // Warning(warningText) {

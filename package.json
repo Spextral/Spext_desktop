@@ -26,6 +26,8 @@
     "nuxt": "^2.13.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.1",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
