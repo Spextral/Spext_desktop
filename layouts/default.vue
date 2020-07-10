@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  middleware: ['fetchData'],
+  middleware: ['fetchData', 'isLogin'],
 }
 </script>
 

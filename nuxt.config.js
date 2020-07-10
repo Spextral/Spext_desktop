@@ -56,7 +56,7 @@ export default {
   axios: {
     baseURL: 'http://localhost/api',
     headers: {
-      Authorization: 'Bearer [token]', // put token
+      Authorization: 'Bearer ', // put token
     },
   },
   /*
