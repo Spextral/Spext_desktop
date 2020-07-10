@@ -1,3 +1,5 @@
+const axios = require('~/plugins/axios').default
+
 export const state = () => ({
   id: null,
   name: null,
@@ -35,7 +37,7 @@ export const mutations = {
 
 export const actions = {
   async getUserInfo({ commit }) {
-    const userInfo = (await this.$axios.get('/user')).data
+    const userInfo = (await axios.get('/user')).data
     commit('setUserInfo', userInfo)
   },
   // async fetchUsers({ commit }, roomId) {

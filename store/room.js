@@ -1,4 +1,5 @@
 import { ROLE_TYPES } from '../utils/roleTypes'
+const axios = require('~/plugins/axios').default
 
 export const state = () => ({
   rooms: null,
@@ -27,14 +28,14 @@ export const mutations = {
 
 export const actions = {
   async fetchRooms({ commit }) {
-    const rooms = [...(await this.$axios.get('/room')).data].reverse()
+    const rooms = [...(await axios.get('/room')).data].reverse()
     commit('setRooms', rooms)
   },
 
   async fetchRoomInfo({ commit }, roomId) {
     const [members, comments] = await Promise.all([
-      this.$axios.get(`/room/${roomId}/members`),
-      this.$axios.get(`/room/${roomId}/comment`),
+      axios.get(`/room/${roomId}/members`),
+      axios.get(`/room/${roomId}/comment`),
     ])
     // const roomInfo = {
     //   id: roomId,
@@ -49,13 +50,13 @@ export const actions = {
   },
 
   async createRoom({ dispatch }, { userId, name }) {
-    const room = (await this.$axios.post('/room', { name })).data
+    const room = (await axios.post('/room', { name })).data
     const roomId = room.id
     const params = {
       userId,
       role: ROLE_TYPES[0].id,
     } // 自分のユーザー情報をどう取ってくるか
-    this.$axios.post(`/room/${roomId}/members`, params)
+    axios.post(`/room/${roomId}/members`, params)
     dispatch('fetchRooms')
     return room
   },
@@ -76,7 +77,7 @@ export const actions = {
       },
     ]
     commit('setRoomInfo', roomInfo)
-    this.$axios.post(`/room/${roomId}/comment`, { comment }).then((value) => {
+    axios.post(`/room/${roomId}/comment`, { comment }).then((value) => {
       dispatch('fetchRoomInfo', roomId)
     })
   },
