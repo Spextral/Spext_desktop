@@ -5,7 +5,12 @@ const client = axios.create({
 })
 
 client.interceptors.request.use((config) => {
-  const token = JSON.parse(localStorage.getItem('token'))
+  let token = localStorage.getItem('token')
+  try {
+    token = JSON.parse(token)
+  } catch (e) {
+    localStorage.removeItem('token')
+  }
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
