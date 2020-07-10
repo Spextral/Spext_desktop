@@ -4,6 +4,16 @@
   </div>
 </template>
 
+<script>
+// import TitleBar from '~/components/molecules/TitleBar'
+// import SideMenu from '~/components/molecules/SideMenu'
+// import FileTab from '~/components/organisms/FileTab'
+
+export default {
+  middleware: ['isLogin'],
+}
+</script>
+
 <style>
 @import '@/assets/styles/common.css';
 </style>
