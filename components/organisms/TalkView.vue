@@ -22,17 +22,20 @@
       </form>
       <el-button @click="toggleMichrophone">マイク</el-button>
     </div>
+    <members-item :room-id="roomId" class="folder-members" />
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import MembersItem from '~/components/molecules/MembersItem'
 // import LoadingPanel from '~/components/atoms/LoadingPanel'
 
 export default {
-  // components: {
-  //   LoadingPanel,
-  // },
+  components: {
+    MembersItem,
+    // LoadingPanel,
+  },
   data() {
     // eslint-disable-next-line
     const speech = new window.webkitSpeechRecognition()
@@ -306,5 +309,11 @@ export default {
 .dialog >>> .v-modal,
 .dialog >>> .el-dialog__wrapper {
   top: var(--titlebar-height);
+}
+
+.folder-main .folder-members {
+  width: var(--members-opening-width);
+  max-height: 100%;
+  overflow: auto;
 }
 </style>

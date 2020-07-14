@@ -48,7 +48,9 @@ export const actions = {
       comments: comments.data,
     })
   },
-
+  getroomId({ commit }, roomId) {
+    commit('setRoomId', roomId)
+  },
   async createRoom({ dispatch }, { userId, name }) {
     const room = (await axios.post('/room', { name })).data
     const roomId = room.id
