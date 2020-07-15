@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <card title="Welcome to Spext">
+    <div title="Welcome to Spext">
       <div class="signin">
         Login from here or <el-button @click="toSignup">Signup</el-button>
       </div>
@@ -26,7 +26,7 @@
           >login
         </el-button>
       </div>
-    </card>
+    </div>
   </div>
 </template>
 
