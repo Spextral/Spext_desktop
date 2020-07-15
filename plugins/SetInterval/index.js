@@ -1,6 +1,8 @@
+import Vue from 'vue'
+
 let intervals = []
 
-export function mySetInterval(func, intervalMilliSec) {
+Vue.prototype.$setInterval = (func, intervalMilliSec) => {
   if (typeof process.env.VUE_APP_DISABLE_SET_INTERVAL !== 'undefined') {
     // eslint-disable-next-line
     console.log(`[DISABLE_SET_INTERVAL] Check environment vars`)
@@ -14,11 +16,11 @@ export function mySetInterval(func, intervalMilliSec) {
   intervals.push(id)
   return id
 }
-export function myClearInterval(id) {
+Vue.prototype.$clearInterval = (id) => {
   clearInterval(id)
   intervals = intervals.filter((i) => i !== id)
 }
-export function clearAllIntervals() {
-  intervals.forEach(myClearInterval)
+Vue.prototype.$clearAllIntervals = () => {
+  intervals.forEach(this.clearInterval)
   intervals = []
 }
