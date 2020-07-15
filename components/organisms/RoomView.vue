@@ -23,6 +23,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import LoadingPanel from '~/components/atoms/LoadingPanel'
+import { mySetInterval, myClearInterval } from '@/plugins/SetInterval'
 
 export default {
   components: {
@@ -31,6 +32,7 @@ export default {
   data() {
     return {
       loading: true,
+      intervalIdOfViewingRoom: null,
     }
   },
   computed: {
@@ -41,6 +43,9 @@ export default {
   async created() {
     await this.$store.dispatch('room/fetchRooms')
     this.loading = false
+    mySetInterval(() => {
+      this.$store.dispatch('room/fetchRooms')
+    }, 10000)
   },
   methods: {
     async openRoomNamePrompt() {
@@ -64,7 +69,13 @@ export default {
       this.enterRoom(room.id)
     },
     enterRoom(roomId) {
+      if (this.intervalIdOfViewingRoom) {
+        myClearInterval(this.intervalIdOfViewingRoom)
+      }
       this.$store.dispatch('room/setRoomId', roomId)
+      this.intervalIdOfViewingRoom = mySetInterval(() => {
+        this.$store.dispatch('room/fetchRoomInfo', roomId)
+      }, 10000)
     },
     logout() {
       this.$store.dispatch('login/logout')
