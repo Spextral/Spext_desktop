@@ -35,7 +35,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ['@/plugins/element-ui', '@/plugins/setInterval'],
+  plugins: ['@/plugins/element-ui', '@/plugins/setInterval', '@/plugins/axios'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -56,6 +56,7 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
+  axios: { baseURL: process.env.API_BASE_URL },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
