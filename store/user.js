@@ -5,15 +5,17 @@ export const state = () => ({
   name: null,
   email: null,
   icon: null,
-  // usersList: {},
+  usersList: {},
 })
 
-// export const getters = {
-//   users: (state) => (roomId) => state.usersList[roomId],
-//   sortedUsers: (state, getters) => (roomId) =>
-//     [...getters.users(roomId)].sort((a, b) => +b.online - a.online),
-//   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
-// }
+export const getters = {
+  users: (state) => (roomId) => state.usersList[roomId],
+  sortedUsers: (state, getters) => (roomId) =>
+    // eslint-disable-next-line
+    console.log(getters.users(roomId),'後々解決する必要あり'),
+  // [...getters.users(roomId)],
+  // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
+}
 
 export const mutations = {
   setUserInfo(state, { id, name, email, icon }) {
@@ -27,12 +29,12 @@ export const mutations = {
     state.email = null
     state.icon = null
   },
-  // setUsers(state, { roomId, users }) {
-  //   state.usersList = {
-  //     ...state.usersList,
-  //     [roomId]: users,
-  //   }
-  // },
+  setUsers(state, { roomId, users }) {
+    state.usersList = {
+      ...state.usersList,
+      [roomId]: users,
+    }
+  },
 }
 
 export const actions = {
@@ -40,10 +42,10 @@ export const actions = {
     const userInfo = (await axios.get('/user')).data
     commit('setUserInfo', userInfo)
   },
-  // async fetchUsers({ commit }, roomId) {
-  //   commit('setUsers', {
-  //     roomId,
-  //     users: await this.$ipc(FETCH_MEMBERS, roomId),
-  //   })
-  // },
+  async fetchUsers({ commit }, roomId) {
+    commit('setUsers', {
+      roomId,
+      users: (await axios.get(`/room/${roomId}/members`)).data,
+    })
+  },
 }
