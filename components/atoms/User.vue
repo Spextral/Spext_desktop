@@ -73,6 +73,8 @@ export default {
 .user-button {
   width: var(--icon-size-small);
   height: var(--icon-size-small);
+  border-style: solid;
+  border-width: 1.5pt;
   border-radius: 50%;
   border-color: #333;
   background: center/cover no-repeat;

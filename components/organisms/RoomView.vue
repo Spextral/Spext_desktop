@@ -1,7 +1,6 @@
 <template>
   <div>
     <loading-panel v-if="loading" />
-    <el-button @click="logout">ログアウト</el-button>
     <div class="controls room">
       <i
         class="fas fa-folder-plus"
@@ -65,10 +64,6 @@ export default {
     },
     enterRoom(roomId) {
       this.$store.dispatch('room/setRoomId', roomId)
-    },
-    logout() {
-      this.$store.dispatch('login/logout')
-      this.$router.push('/login')
     },
   },
 }
