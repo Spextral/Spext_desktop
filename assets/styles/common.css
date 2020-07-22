@@ -38,6 +38,7 @@
   --font-base: #1d1c1d;
   --font-sub: #616061;
   --comment-circle-size: 32px;
+  --michrophone-button-size: 32px;
   --commit-maker-height: 102px;
   --commit-graph-left: 35px;
   --open-icon-height: 50px;
@@ -52,8 +53,8 @@
 }
 
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

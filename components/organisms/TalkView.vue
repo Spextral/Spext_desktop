@@ -20,7 +20,9 @@
           placeholder="Input comment..."
         />
       </form>
-      <el-button @click="toggleMichrophone">マイク</el-button>
+      <el-button class="michrophon-button" @click="toggleMichrophone"
+        >マイク</el-button
+      >
     </div>
     <members-item :room-id="roomId" class="folder-members" />
   </div>
@@ -109,21 +111,24 @@ export default {
 </script>
 
 <style scoped>
-.commit-container {
+/* .commit-container {
   user-select: text;
   padding-top: 30px;
+  width: var(--commit-circle-size);
+  width: 5px;
   height: 100%;
-  overflow: auto;
-}
-
-.commit-container-modified-true {
-  user-select: text;
-  padding-top: 30px;
   height: calc(100% - var(--commit-maker-height));
-  overflow: auto;
-}
+  border-radius: 50%;
+  background: center/cover no-repeat;
+  background: var(--color-blue);
+  position: absolute;
+  top: var(--commit-circle-size);
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+} */
 
-.commit-container-modified-true > div,
+/* .commit-container-modified-true > div,
 .commit-container > div {
   position: relative;
 }
@@ -131,17 +136,13 @@ export default {
 .commit-container-modified-true img,
 .commit-container img {
   user-select: none;
-}
+} */
 
-.commit-container-modified-true .comments-panel .file-controls,
+/* .commit-container-modified-true .comments-panel .file-controls,
 .commit-container .comments-panel .file-controls {
   opacity: 0;
-}
-
-.commit-container-modified-true .comments-panel:hover .file-controls,
-.commit-container .comments-panel:hover .file-controls {
   opacity: 1;
-}
+} */
 
 .comments-container {
   width: 100%;
@@ -149,13 +150,7 @@ export default {
   right: 0;
   top: 0; /* left: var(--commit-graph-left); */
   bottom: 0;
-}
-
-.commit-circle {
-  width: var(--commit-circle-size);
-  height: var(--commit-circle-size);
-  border-radius: 50%;
-  background: center/cover no-repeat;
+  overflow: auto;
 }
 
 .enhance {
@@ -164,20 +159,18 @@ export default {
   border-width: 3pt;
 }
 
-.commit-line {
-  width: 5px;
-  position: absolute;
-  top: var(--commit-circle-size);
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  background: var(--color-blue);
+.comment-body .comment-message {
+  border: solid;
+  border-radius: 10px;
+  display: inline-block;
+  font-size: 18px;
+  padding-inline: 3px;
+  margin: 3px;
 }
 
 .comments-panel {
   bottom: 0;
-  right: 0;
-  margin-left: 90px;
+  right: 0; /* margin-left: 90px; */
   margin-right: 30px; /* padding-bottom: 40px; */
 }
 
@@ -239,6 +232,7 @@ export default {
 
 .comments-panel .comment-input {
   margin-top: 25px;
+  margin-right: var(--michrophone-button-size);
 }
 
 .comments-panel .comment-input input {
@@ -259,6 +253,10 @@ export default {
 
 .comments-panel .comment-input input:focus {
   outline: none;
+}
+
+.michrophone-button {
+  width: var(--michrophone-button-size);
 }
 
 .commit-maker {
