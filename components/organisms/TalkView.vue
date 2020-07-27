@@ -1,31 +1,49 @@
 <template>
   <div v-if="roomId">
     <!-- <loading-panel v-if="loading" /> -->
-    <div v-if="roomInfo(roomId)" class="comments-container">
-      <div
-        v-for="comment in roomInfo(roomId).comments"
-        :key="comment.id"
-        class="comment"
-      >
-        <div class="comment-body">
-          <div class="comment-message">{{ comment.content }}</div>
+    <div class="comment-view">
+      <div v-if="roomInfo(roomId)" class="comments-container">
+        <div
+          v-for="comment in roomInfo(roomId).comments"
+          :key="comment.id"
+          class="comment"
+        >
+          <div
+            class="comment-body"
+            :class="[comment.user_id == id ? 'right-flush' : 'left-flush']"
+          >
+            <div class="comment-message">
+              {{ comment.content }}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="comments-panel">
-      <form class="comment-input" @submit.prevent="submitComment">
-        <input
-          v-model="newComment"
-          type="text"
-          placeholder="Input comment..."
-        />
-      </form>
-      <el-button class="michrophon-button" @click="toggleMichrophone"
-        >マイク</el-button
-      >
+      <div v-else class="comments-container"></div>
+      <div class="comments-panel">
+        <div
+          class="michrophone-button"
+          :class="{ 'border-red': michrophoneEnabled }"
+        >
+          <i
+            class="fa fa-2x"
+            :class="[
+              michrophoneEnabled ? 'fa-microphone' : 'fa-microphone-slash',
+            ]"
+            @click="toggleMichrophone"
+          />
+        </div>
+        <form class="comment-input" @submit.prevent="submitComment">
+          <input
+            v-model="newComment"
+            type="text"
+            placeholder="Input comment..."
+          />
+        </form>
+      </div>
     </div>
     <members-item :room-id="roomId" class="folder-members" />
   </div>
+  <div v-else class="talk-container"></div>
 </template>
 
 <script>
@@ -111,52 +129,24 @@ export default {
 </script>
 
 <style scoped>
-/* .commit-container {
-  user-select: text;
-  padding-top: 30px;
-  width: var(--commit-circle-size);
-  width: 5px;
+.comment-view {
   height: 100%;
-  height: calc(100% - var(--commit-maker-height));
-  border-radius: 50%;
-  background: center/cover no-repeat;
-  background: var(--color-blue);
-  position: absolute;
-  top: var(--commit-circle-size);
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-} */
-
-/* .commit-container-modified-true > div,
-.commit-container > div {
-  position: relative;
+  position: fixed;
+  left: inherit;
+  right: var(--members-opening-width);
 }
-
-.commit-container-modified-true img,
-.commit-container img {
-  user-select: none;
-} */
-
-/* .commit-container-modified-true .comments-panel .file-controls,
-.commit-container .comments-panel .file-controls {
-  opacity: 0;
-  opacity: 1;
-} */
 
 .comments-container {
   width: 100%;
-  height: 80%;
+  height: calc(100% - 60px);
   right: 0;
-  top: 0; /* left: var(--commit-graph-left); */
+  top: 0;
   bottom: 0;
   overflow: auto;
 }
 
-.enhance {
-  border-style: solid;
-  border-color: green;
-  border-width: 3pt;
+.comment-body {
+  display: block;
 }
 
 .comment-body .comment-message {
@@ -166,20 +156,20 @@ export default {
   font-size: 18px;
   padding-inline: 3px;
   margin: 3px;
+  word-wrap: break-word;
+  max-width: 80%;
+  text-align: left;
 }
 
-.comments-panel {
-  bottom: 0;
-  right: 0; /* margin-left: 90px; */
-  margin-right: 30px; /* padding-bottom: 40px; */
+.left-flush {
+  text-align: left;
 }
 
-.comments-panel .comment {
-  position: relative;
-  margin-top: 12px;
+.right-flush {
+  text-align: right;
 }
 
-.comments-panel .comment-circle {
+/* .comments-panel .comment-circle {
   width: var(--comment-circle-size);
   height: var(--comment-circle-size);
   border-radius: 50%;
@@ -187,59 +177,38 @@ export default {
   position: absolute;
   top: 3px;
   left: 0;
-}
+} */
 
-.comments-panel .comment-body {
+/* .comments-panel .comment-body {
   margin-left: var(--comment-circle-size);
   padding-left: 15px;
-}
+} */
 
-.comments-panel .committer-info {
+/* .comments-panel .committer-info {
   position: relative;
   padding-right: 70px;
-}
+} */
 
-.comments-panel .committer-info .file-controls .file-controls-icon {
-  display: inline-block;
-  padding: 3px;
-  cursor: pointer;
-  margin-left: 5px;
-  margin-top: -4px;
-  font-size: 18px;
-  color: var(--color-border);
-  transition: 0.2s;
-}
-
-.comments-panel .committer-info .file-controls .file-controls-icon:hover {
-  color: unset;
-}
-
-.comments-panel .committer-name,
-.comments-panel .comment-username {
+/* .comments-panel .comment-username {
   font-weight: bold;
   display: inline-block;
-}
+} */
 
-.comments-panel .committer-date,
-.comments-panel .comment-date {
+/* .comments-panel .comment-date {
   font-size: 12px;
   color: var(--color-date);
-}
-
-.comments-panel .committer-message {
-  padding: 2px 15px 10px 0;
-}
+} */
 
 .comments-panel .comment-input {
-  margin-top: 25px;
-  margin-right: var(--michrophone-button-size);
+  width: calc(100% - 70px);
+  display: inline-block;
 }
 
 .comments-panel .comment-input input {
   border: none;
   background: var(--color-sub);
-  font-size: 16px;
-  padding: 10px;
+  font-size: 20px;
+  padding: 12px;
   width: 100%;
   color: var(--font-base);
   border-radius: 5px;
@@ -255,38 +224,35 @@ export default {
   outline: none;
 }
 
-.michrophone-button {
-  width: var(--michrophone-button-size);
+.comments-panel .michrophone-button {
+  height: 48px;
+  width: 60px;
+  border: solid;
+  opacity: 60%;
+  border-radius: 6px;
+  padding: 3px 6px;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
 }
 
-.commit-maker {
-  height: var(--commit-maker-height);
-  border-top: 1px solid var(--color-border);
-  position: relative;
+.comments-panel .border-red {
+  border-color: red;
 }
 
-.commit-maker .comments-panel {
+.comments-panel .michrophone-button i {
   padding-top: 1px;
 }
 
-.commit-maker .commit-maker-graph {
-  position: absolute;
-  top: 18px;
-  left: var(--commit-graph-left);
+.comments-panel .michrophone-button:hover {
+  opacity: unset;
 }
 
-.commit-maker .comment-maker-text {
-  font-size: 12px;
-  color: var(--font-base);
-  overflow: hidden;
-  white-space: nowrap;
+.comments-panel .michrophone-button .fa-microphone {
+  color: red;
 }
 
-.commit-maker .comment-input {
-  margin-top: 12px;
-}
-
-.blink {
+/* .blink {
   animation: blinkAnime 0.8s infinite alternate;
 }
 
@@ -298,7 +264,7 @@ export default {
   100% {
     opacity: 1;
   }
-}
+} */
 
 .dialog >>> .el-dialog__body {
   padding: 20px 40px 50px;
@@ -309,9 +275,11 @@ export default {
   top: var(--titlebar-height);
 }
 
-.folder-main .folder-members {
-  width: var(--members-opening-width);
-  max-height: 100%;
+.folder-members {
+  height: 100%;
   overflow: auto;
+  position: fixed;
+  right: 0;
+  left: calc(100% - var(--members-opening-width));
 }
 </style>
