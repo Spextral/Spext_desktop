@@ -8,10 +8,7 @@ export const state = () => ({
 
 export const getters = {
   users: (state) => (roomId) => state.usersList[roomId],
-  sortedUsers: (state, getters) => (roomId) =>
-    // eslint-disable-next-line
-    console.log(getters.users(roomId), '後々解決する必要あり'),
-  // [...getters.users(roomId)],
+  sortedUsers: (state, getters) => (roomId) => [...getters.users(roomId)],
   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
 }
 
