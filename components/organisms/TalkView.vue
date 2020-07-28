@@ -12,6 +12,11 @@
             class="comment-body"
             :class="[comment.user_id == id ? 'right-flush' : 'left-flush']"
           >
+            <i
+              v-if="comment.user_id == id"
+              class="fas fa-edit"
+              @click="openCommentEditPrompt(comment)"
+            />
             <div class="comment-message">
               {{ comment.content }}
             </div>
@@ -109,6 +114,23 @@ export default {
         this.newComment = ''
       }
     },
+    async openCommentEditPrompt(comment) {
+      const { value } = await this.$prompt(
+        `Please input new message (now: ${comment.content})`,
+        'Edit message',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+        }
+      ).catch(() => ({}))
+
+      if (!value) return
+
+      this.$store.dispatch('room/editComment', {
+        commentId: comment.id,
+        comment: value,
+      })
+    },
     toggleMichrophone() {
       this.michrophoneEnabled = !this.michrophoneEnabled
       if (this.michrophoneEnabled) {
@@ -139,6 +161,10 @@ export default {
 .comments-container {
   height: calc(100% - 60px);
   overflow: auto;
+}
+
+.comment .comment-body i {
+  cursor: pointer;
 }
 
 .comment .comment-body .comment-message {
