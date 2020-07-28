@@ -137,20 +137,13 @@ export default {
 }
 
 .comments-container {
-  width: 100%;
   height: calc(100% - 60px);
-  right: 0;
-  top: 0;
-  bottom: 0;
   overflow: auto;
 }
 
-.comment-body {
-  display: block;
-}
-
-.comment-body .comment-message {
+.comment .comment-body .comment-message {
   border: solid;
+  border-width: 1px;
   border-radius: 10px;
   display: inline-block;
   font-size: 18px;
@@ -161,12 +154,17 @@ export default {
   text-align: left;
 }
 
-.left-flush {
+.comment .left-flush {
   text-align: left;
 }
 
-.right-flush {
+.comment .right-flush {
   text-align: right;
+}
+
+.comment .right-flush .comment-message {
+  background-color: var(--color-blue);
+  font-weight: 500;
 }
 
 /* .comments-panel .comment-circle {
