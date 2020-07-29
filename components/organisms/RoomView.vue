@@ -1,6 +1,7 @@
 <template>
   <div>
     <loading-panel v-if="loading" />
+    <el-button @click="logout">ログアウト</el-button>
     <div class="controls room">
       <i
         class="fas fa-folder-plus"
@@ -30,6 +31,7 @@ export default {
   data() {
     return {
       loading: true,
+      intervalIdOfViewingRoom: null,
     }
   },
   computed: {
@@ -40,6 +42,9 @@ export default {
   async created() {
     await this.$store.dispatch('room/fetchRooms')
     this.loading = false
+    this.$setInterval(() => {
+      this.$store.dispatch('room/fetchRooms')
+    }, 10000)
   },
   methods: {
     async openRoomNamePrompt() {
@@ -63,7 +68,17 @@ export default {
       this.enterRoom(room.id)
     },
     enterRoom(roomId) {
+      if (this.intervalIdOfViewingRoom) {
+        this.$clearInterval(this.intervalIdOfViewingRoom)
+      }
       this.$store.dispatch('room/setRoomId', roomId)
+      this.intervalIdOfViewingRoom = this.$setInterval(() => {
+        this.$store.dispatch('room/fetchRoomInfo', roomId)
+      }, 10000)
+    },
+    logout() {
+      this.$store.dispatch('login/logout')
+      this.$router.push('/login')
     },
   },
 }

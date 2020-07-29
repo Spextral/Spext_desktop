@@ -1,5 +1,3 @@
-const axios = require('~/plugins/axios').default
-
 export const state = () => ({
   email: null,
 })
@@ -15,6 +13,7 @@ export const actions = {
     return localStorage.getItem('token')
   },
   logout() {
+    this.$clearAllIntervals()
     localStorage.removeItem('token')
   },
   prelogin(store, email) {
@@ -22,7 +21,7 @@ export const actions = {
     // return this.$ipc(PRELOGIN, email)
   },
   async login(store, { email, password }) {
-    const token = (await axios.post('/auth/login', { email, password })).data
+    const token = (await this.$axios.$post('/auth/login', { email, password }))
       .access_token
     localStorage.setItem('token', JSON.stringify(token))
   },

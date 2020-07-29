@@ -1,5 +1,3 @@
-const axios = require('~/plugins/axios').default
-
 export const state = () => ({
   id: null,
   name: null,
@@ -12,7 +10,7 @@ export const getters = {
   users: (state) => (roomId) => state.usersList[roomId],
   sortedUsers: (state, getters) => (roomId) =>
     // eslint-disable-next-line
-    console.log(getters.users(roomId),'後々解決する必要あり'),
+    console.log(getters.users(roomId), '後々解決する必要あり'),
   // [...getters.users(roomId)],
   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
 }
@@ -39,13 +37,13 @@ export const mutations = {
 
 export const actions = {
   async getUserInfo({ commit }) {
-    const userInfo = (await axios.get('/user')).data
+    const userInfo = await this.$axios.$get('/user')
     commit('setUserInfo', userInfo)
   },
   async fetchUsers({ commit }, roomId) {
     commit('setUsers', {
       roomId,
-      users: (await axios.get(`/room/${roomId}/members`)).data,
+      users: await this.$axios.$get(`/room/${roomId}/members`),
     })
   },
 }
