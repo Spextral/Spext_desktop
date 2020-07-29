@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <room-view class="room-container" />
     <talk-view class="talk-container" />
   </div>
@@ -18,23 +18,20 @@ export default {
 </script>
 
 <style>
-.container {
-  display: flex;
-}
-
 .room-container {
   height: 100%;
   overflow: auto;
   color: var(--font-sub);
-  flex: 2;
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: calc(100% - var(--room-ratio));
 }
 
 .talk-container {
   height: 100%;
-  overflow: auto;
   color: var(--font-sub);
-  position: relative;
-  flex: 3;
+  position: fixed;
+  left: var(--room-ratio);
+  right: 0;
 }
 </style>
