@@ -80,6 +80,10 @@ export default {
       this.$store.dispatch('login/logout')
       this.$router.push('/login')
     },
+    logout() {
+      this.$store.dispatch('login/logout')
+      this.$router.push('/login')
+    },
   },
 }
 </script>

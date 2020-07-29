@@ -20,10 +20,9 @@
   --titlebar-height: 42px;
   --controls-width: 150px;
   --navbar-height: 70px;
-  --sidemenu-width: 180px;
   --tab-height: 34px;
   --members-width: 54px;
-  --members-opening-width: 300px;
+  --members-opening-width: 200px;
   --icon-size-small: 26px;
   --commit-circle-size: 40px;
   --color-page: #fff;
@@ -38,22 +37,19 @@
   --font-base: #1d1c1d;
   --font-sub: #616061;
   --comment-circle-size: 32px;
-  --commit-maker-height: 102px;
-  --commit-graph-left: 35px;
   --open-icon-height: 50px;
   --top-bar-height: 70px;
   --viewer-width: 650px;
-  --commit-maker-height: 85px;
   --herder-height: 100px;
   --padding: 30px;
   --item-height: 40px;
   --drop-color: #409eff;
-  --drop-padding: 80px;
+  --room-ratio: 33%;
 }
 
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
