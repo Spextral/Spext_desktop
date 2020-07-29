@@ -1,5 +1,4 @@
 import { ROLE_TYPES } from '~~/utils/roleTypes'
-const axios = require('~/plugins/axios').default
 export const state = () => ({
   email: null,
 })
@@ -15,12 +14,12 @@ export const mutations = {
 
 export const actions = {
   async getUserInfo({ commit }, { email, roomId }) {
-    const userId = (await axios.get(`/invite/${email}`)).data
+    const userId = await this.$axios.$get(`/invite/${email}`)
     if (userId !== 'nothing') {
       const params = { userId, roomId, role: ROLE_TYPES[1].id }
-      await axios.post(`/room/${roomId}/members`, params).data
+      await this.$axios.post(`/room/${roomId}/members`, params)
     } else {
-      await axios.post(`/invite`, { email, roomId })
+      await this.$axios.post(`/invite`, { email, roomId })
     }
     commit('setUserInfo', email)
     return '招待しました'

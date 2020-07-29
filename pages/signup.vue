@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <card title="Welcome to Spext">
+    <div title="Welcome to Spext">
       <div class="format">
         <el-input
           v-model="name"
@@ -41,7 +41,7 @@
           >Sign Up</el-button
         >
       </div>
-    </card>
+    </div>
   </div>
 </template>
 
