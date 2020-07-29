@@ -1,12 +1,18 @@
 <template>
   <div class="root">
+    <header-bar />
     <nuxt class="nuxt" />
   </div>
 </template>
 
 <script>
+import HeaderBar from '~/components/organisms/Header'
+
 export default {
   middleware: ['isLogin', 'fetchData'],
+  components: {
+    HeaderBar,
+  },
 }
 </script>
 
@@ -17,7 +23,7 @@ export default {
 <style scoped>
 .root {
   position: fixed;
-  top: 0;
+  top: var(--titlebar-height);
   left: 0;
   right: 0;
   bottom: 0;
