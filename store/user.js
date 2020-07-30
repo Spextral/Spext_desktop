@@ -8,7 +8,11 @@ export const state = () => ({
 
 export const getters = {
   users: (state) => (roomId) => state.usersList[roomId],
-  sortedUsers: (state, getters) => (roomId) => [...getters.users(roomId)],
+  sortedUsers: (state, getters) => (roomId) => {
+    if (getters.users(roomId)) {
+      return [...getters.users(roomId)]
+    }
+  },
   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,
 }
 

@@ -90,7 +90,7 @@ export const actions = {
       (comment) => comment.id === commentId
     ).content = comment
     commit('setRoomInfo', roomInfo)
-    axios
+    this.$axios
       .put(`/room/${roomId}/comment/${commentId}`, { comment })
       .then((value) => {
         dispatch('fetchRoomInfo', roomId)
