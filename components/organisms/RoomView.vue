@@ -1,7 +1,6 @@
 <template>
   <div>
     <loading-panel v-if="loading" />
-    <el-button @click="logout">ログアウト</el-button>
     <div class="controls room">
       <i
         class="fas fa-folder-plus"
@@ -72,7 +71,6 @@ export default {
         this.$clearInterval(this.intervalIdOfViewingRoom)
       }
       this.$store.dispatch('room/setRoomId', roomId)
-
       this.$store.dispatch('user/fetchUsers', roomId)
       this.intervalIdOfViewingRoom = this.$setInterval(() => {
         this.$store.dispatch('room/fetchRoomInfo', roomId)
