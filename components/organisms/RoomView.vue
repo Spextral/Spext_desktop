@@ -78,7 +78,6 @@ export default {
         this.$store.dispatch('room/fetchRoomInfo', roomId)
         this.$store.dispatch('user/fetchUsers', roomId)
       }, 10000)
-
     },
     logout() {
       this.$store.dispatch('login/logout')
