@@ -88,19 +88,20 @@ export default {
 <style scoped>
 .room {
   display: block;
-  height: 26px;
+  height: 52px;
   margin-top: 0.25rem;
   padding-left: 12px;
-  font-size: 14px;
+  font-size: 20px;
   cursor: pointer;
   transition: 0.2s color, background-color ease;
   position: relative;
 }
 .controls {
+  cursor: auto;
   text-align: right;
   padding: 8px 20px;
 }
-.controls .i {
+.controls i {
   cursor: pointer;
   font-size: 16px;
 }

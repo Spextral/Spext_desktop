@@ -74,7 +74,7 @@ export const actions = {
           ? comments[comments.length - 1].id + 1 + '_temp'
           : '1_temp',
         roomId,
-        userId,
+        user_id: userId,
       },
     ]
     commit('setRoomInfo', roomInfo)

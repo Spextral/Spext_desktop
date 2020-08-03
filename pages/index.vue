@@ -22,7 +22,7 @@ export default {
   height: 100%;
   overflow: auto;
   color: var(--font-sub);
-  position: fixed;
+  position: absolute;
   left: 0;
   right: calc(100% - var(--room-ratio));
 }
@@ -30,7 +30,7 @@ export default {
 .talk-container {
   height: 100%;
   color: var(--font-sub);
-  position: fixed;
+  position: absolute;
   left: var(--room-ratio);
   right: 0;
 }
