@@ -1,0 +1,38 @@
+name: gh-pages
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Add key to allow access to repository
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          echo "${{ secrets.GH_PAGES_SECRET_KEY }}" > ~/.ssh/gh_pages
+          chmod 600 ~/.ssh/gh_pages
+          cat <<EOT >> ~/.ssh/config
+          Host github.com
+          HostName github.com
+          IdentityFile ~/.ssh/gh_pages
+          EOT
+      - name: Release to GitHub Pages
+        env:
+          USE_SSH: true
+          GIT_USER: git
+        run: |
+          git config --global user.email "actions@gihub.com"
+          git config --global user.name "gh-actions"
+          yarn install --frozen-lockfile
+          echo "${{ secrets.DOT_ENV }}" > .env
+          DEPLOY_ENV=GH_PAGES yarn generate
+          npx push-dir --dir=dist --branch=gh-pages --cleanup
