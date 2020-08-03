@@ -1,7 +1,8 @@
 require('dotenv').config()
-const { API_BASE_URL } = process.env
+const { API_BASE_URL, DEPLOY_ENV } = process.env
 
 export default {
+  ...(DEPLOY_ENV === 'GH_PAGES' ? { router: { base: '/Spext_desktop/' } } : {}),
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
