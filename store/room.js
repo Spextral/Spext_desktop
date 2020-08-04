@@ -8,6 +8,26 @@ export const state = () => ({
 
 export const getters = {
   roomInfo: (state) => (roomId) => state.roomInfoList[roomId],
+  sortedRooms: (state, getters) => {
+    if (state.rooms) {
+      const mapped = state.rooms.map((room, i) => {
+        if (
+          getters.roomInfo(room.id) &&
+          getters.roomInfo(room.id).comments.length
+        ) {
+          const comments = getters.roomInfo(room.id).comments
+          return { index: i, value: comments[comments.length - 1].id }
+        } else {
+          return { index: i, value: i }
+        }
+      })
+      mapped.sort((a, b) => b.value - a.value)
+      const result = mapped.map(function (el) {
+        return state.rooms[el.index]
+      })
+      return result
+    }
+  },
 }
 
 export const mutations = {
@@ -32,8 +52,8 @@ export const actions = {
   },
 
   async fetchRoomInfo({ commit }, roomId) {
-    const [members, comments] = await Promise.all([
-      this.$axios.$get(`/room/${roomId}/members`),
+    const [comments] = await Promise.all([
+      // this.$axios.$get(`/room/${roomId}/members`),
       this.$axios.$get(`/room/${roomId}/comment`),
     ])
     // const roomInfo = {
@@ -43,7 +63,7 @@ export const actions = {
     // }
     commit('setRoomInfo', {
       id: roomId,
-      members,
+      // members,
       comments,
     })
   },
@@ -57,8 +77,9 @@ export const actions = {
       userId,
       role: ROLE_TYPES[0].id,
     } // 自分のユーザー情報をどう取ってくるか
-    this.$axios.post(`/room/${roomId}/members`, params)
-    dispatch('fetchRooms')
+    this.$axios.post(`/room/${roomId}/members`, params).then(() => {
+      dispatch('fetchRooms')
+    })
     return room
   },
 
@@ -97,8 +118,7 @@ export const actions = {
       })
   },
 
-  setRoomId({ commit, dispatch }, roomId) {
+  setRoomId({ commit }, roomId) {
     commit('setRoomId', roomId)
-    dispatch('fetchRoomInfo', roomId)
   },
 }
