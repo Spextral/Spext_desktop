@@ -15,6 +15,7 @@
       @click="enterRoom(room.id)"
     >
       <span>{{ room.name }}</span>
+      <span style="font-size: 16px;">( {{ roomDescription(room.id) }} )</span>
     </div>
   </div>
 </template>
@@ -37,6 +38,20 @@ export default {
     ...mapState('room', ['rooms']),
     ...mapState('user', ['id']),
     ...mapGetters('room', ['roomInfo', 'sortedRooms']),
+    ...mapGetters('user', ['sortedUsers']),
+    roomDescription() {
+      return (roomId) => {
+        if (this.sortedUsers(roomId)) {
+          if (this.sortedUsers(roomId).length === 1) {
+            return '自分だけのトークルーム'
+          } else if (this.sortedUsers(roomId).length === 2) {
+            return `${this.sortedUsers(roomId)[1].name}さんとのトークルーム`
+          } else {
+            return `${this.sortedUsers(roomId).length}人のトークルーム`
+          }
+        }
+      }
+    },
   },
   async created() {
     await this.$store.dispatch('room/fetchRooms')
