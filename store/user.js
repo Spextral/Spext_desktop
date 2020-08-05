@@ -10,7 +10,18 @@ export const getters = {
   users: (state) => (roomId) => state.usersList[roomId],
   sortedUsers: (state, getters) => (roomId) => {
     if (getters.users(roomId)) {
-      return [...getters.users(roomId)]
+      const mapped = getters.users(roomId).map((user, i) => {
+        if (user.id === state.id) {
+          return { index: i, value: 0 }
+        } else {
+          return { index: i, value: 1 }
+        }
+      })
+      mapped.sort((a, b) => a.value - b.value)
+      const result = mapped.map(function (el) {
+        return getters.users(roomId)[el.index]
+      })
+      return result
     }
   },
   // roleLabel: () => roleId => ROLE_TYPES.find(role => role.id === roleId).label,

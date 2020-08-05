@@ -22,8 +22,8 @@ export default {
 
 <style scoped>
 .root {
-  position: fixed;
-  top: var(--titlebar-height);
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -33,8 +33,8 @@ export default {
 
 .nuxt {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: var(--titlebar-height);
+  left: 2px;
   right: 2px;
   bottom: 2px;
   background: var(--color-page);

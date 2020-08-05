@@ -9,12 +9,13 @@
       />
     </div>
     <div
-      v-for="room in rooms"
+      v-for="room in sortedRooms"
       :key="room.id"
       class="room"
       @click="enterRoom(room.id)"
     >
       <span>{{ room.name }}</span>
+      <span style="font-size: 16px;">( {{ roomDescription(room.id) }} )</span>
     </div>
   </div>
 </template>
@@ -36,14 +37,43 @@ export default {
   computed: {
     ...mapState('room', ['rooms']),
     ...mapState('user', ['id']),
-    ...mapGetters('room', ['roomInfo']),
+    ...mapGetters('room', ['roomInfo', 'sortedRooms']),
+    ...mapGetters('user', ['sortedUsers']),
+    roomDescription() {
+      return (roomId) => {
+        if (this.sortedUsers(roomId)) {
+          if (this.sortedUsers(roomId).length === 1) {
+            return '自分だけのトークルーム'
+          } else if (this.sortedUsers(roomId).length === 2) {
+            return `${this.sortedUsers(roomId)[1].name}さんとのトークルーム`
+          } else {
+            return `${this.sortedUsers(roomId).length}人のトークルーム`
+          }
+        }
+      }
+    },
   },
   async created() {
     await this.$store.dispatch('room/fetchRooms')
     this.loading = false
     this.$setInterval(() => {
       this.$store.dispatch('room/fetchRooms')
-    }, 10000)
+    }, 30000)
+    for (const room of this.rooms) {
+      const roomId = room.id
+      this.$store.dispatch('room/fetchRoomInfo', roomId)
+      this.$store.dispatch('user/fetchUsers', roomId)
+    }
+    this.$setInterval(async () => {
+      for (const room of this.rooms) {
+        const roomId = room.id
+        await this.$store.dispatch('room/fetchRoomInfo', roomId)
+        await this.$store.dispatch('user/fetchUsers', roomId)
+      }
+    }, 30000)
+  },
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.$clearAllIntervals)
   },
   methods: {
     async openRoomNamePrompt() {
@@ -71,7 +101,6 @@ export default {
         this.$clearInterval(this.intervalIdOfViewingRoom)
       }
       this.$store.dispatch('room/setRoomId', roomId)
-      this.$store.dispatch('user/fetchUsers', roomId)
       this.intervalIdOfViewingRoom = this.$setInterval(() => {
         this.$store.dispatch('room/fetchRoomInfo', roomId)
         this.$store.dispatch('user/fetchUsers', roomId)
@@ -88,19 +117,20 @@ export default {
 <style scoped>
 .room {
   display: block;
-  height: 26px;
+  height: 52px;
   margin-top: 0.25rem;
   padding-left: 12px;
-  font-size: 14px;
+  font-size: 20px;
   cursor: pointer;
   transition: 0.2s color, background-color ease;
   position: relative;
 }
 .controls {
+  cursor: auto;
   text-align: right;
   padding: 8px 20px;
 }
-.controls .i {
+.controls i {
   cursor: pointer;
   font-size: 16px;
 }
