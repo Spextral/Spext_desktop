@@ -85,7 +85,9 @@ export default {
       if (this.intervalIdOfViewingRoom) {
         this.$clearInterval(this.intervalIdOfViewingRoom)
       }
-      this.$store.dispatch('room/setRoomId', roomId)
+      this.$store
+        .dispatch('room/setRoomId', null)
+        .then(() => this.$store.dispatch('room/setRoomId', roomId))
       this.intervalIdOfViewingRoom = this.$setInterval(() => {
         this.$store.dispatch('room/fetchRoomInfo', roomId)
         this.$store.dispatch('user/fetchUsers', roomId)

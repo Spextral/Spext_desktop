@@ -1,5 +1,5 @@
 <template>
-  <div v-if="roomId">
+  <div>
     <!-- <loading-panel v-if="loading" /> -->
     <div class="comment-view">
       <div v-if="roomInfo(roomId)" class="comments-container">
@@ -42,6 +42,7 @@
         </div>
         <form class="comment-input" @submit.prevent="submitComment">
           <input
+            ref="commentInput"
             v-model="newComment"
             type="text"
             placeholder="Input comment..."
@@ -51,7 +52,6 @@
     </div>
     <members-item :room-id="roomId" class="folder-members" />
   </div>
-  <div v-else class="talk-container"></div>
 </template>
 
 <script>
@@ -111,9 +111,9 @@ export default {
     //   return icon => ({ backgroundImage: `url(${icon})` })
     // },
   },
-  // mounted() {
-  //   this.loading = false
-  // },
+  mounted() {
+    this.$refs.commentInput.focus()
+  },
   methods: {
     submitComment() {
       const message = this.newComment
