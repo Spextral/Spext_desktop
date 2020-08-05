@@ -36,7 +36,12 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ['@/plugins/element-ui', '@/plugins/setInterval', '@/plugins/axios'],
+  plugins: [
+    '@/plugins/element-ui',
+    '@/plugins/setInterval',
+    '@/plugins/axios',
+    '@/plugins/beforeunload',
+  ],
   /*
    ** Nuxt.js dev-modules
    */

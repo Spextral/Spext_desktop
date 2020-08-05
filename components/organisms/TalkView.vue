@@ -1,5 +1,5 @@
 <template>
-  <div v-if="roomId">
+  <div>
     <!-- <loading-panel v-if="loading" /> -->
     <div class="comment-view">
       <div v-if="roomInfo(roomId)" class="comments-container">
@@ -12,14 +12,17 @@
             class="comment-body"
             :class="[comment.user_id == id ? 'right-flush' : 'left-flush']"
           >
+            <div class="comment-message">
+              {{ comment.content }}
+            </div>
             <i
               v-if="comment.user_id == id"
               class="fas fa-edit"
               @click="openCommentEditPrompt(comment)"
             />
-            <div class="comment-message">
-              {{ comment.content }}
-            </div>
+            <!-- <div style="display: inline; direction: ltr;">
+              {{ updatedAt(comment) }}
+            </div> -->
           </div>
         </div>
       </div>
@@ -39,6 +42,7 @@
         </div>
         <form class="comment-input" @submit.prevent="submitComment">
           <input
+            ref="commentInput"
             v-model="newComment"
             type="text"
             placeholder="Input comment..."
@@ -48,7 +52,6 @@
     </div>
     <members-item :room-id="roomId" class="folder-members" />
   </div>
-  <div v-else class="talk-container"></div>
 </template>
 
 <script>
@@ -93,6 +96,14 @@ export default {
     ...mapState('room', ['roomId']),
     ...mapState('user', ['id']),
     ...mapGetters('room', ['roomInfo']),
+    updatedAt() {
+      return (comment) => {
+        const [date, time] = comment.updated_at.split(' ')
+        const [YYYY, MM, DD] = date.split('-')
+        const [mm, hh] = time.split(':').slice(1)
+        return `${YYYY}/${MM}/${DD} ${hh}:${mm}`
+      }
+    },
     // user() {
     //   return id => this.users.find(user => user.id === id)
     // },
@@ -100,9 +111,9 @@ export default {
     //   return icon => ({ backgroundImage: `url(${icon})` })
     // },
   },
-  // mounted() {
-  //   this.loading = false
-  // },
+  mounted() {
+    this.$refs.commentInput.focus()
+  },
   methods: {
     submitComment() {
       const message = this.newComment
@@ -116,7 +127,11 @@ export default {
     },
     async openCommentEditPrompt(comment) {
       const { value } = await this.$prompt(
-        `Please input new message (now: ${comment.content})`,
+        `Please input new message (now: ${
+          comment.content.length > 20
+            ? comment.content.substr(0, 20) + '...'
+            : comment.content
+        })`,
         'Edit message',
         {
           confirmButtonText: 'OK',
@@ -153,8 +168,8 @@ export default {
 <style scoped>
 .comment-view {
   height: 100%;
-  position: fixed;
-  left: inherit;
+  position: absolute;
+  left: 0;
   right: var(--members-opening-width);
 }
 
@@ -176,16 +191,12 @@ export default {
   padding-inline: 3px;
   margin: 3px;
   word-wrap: break-word;
-  max-width: 80%;
-  text-align: left;
-}
-
-.comment .left-flush {
+  max-width: 70%;
   text-align: left;
 }
 
 .comment .right-flush {
-  text-align: right;
+  direction: rtl;
 }
 
 .comment .right-flush .comment-message {
@@ -302,7 +313,7 @@ export default {
 .folder-members {
   height: 100%;
   overflow: auto;
-  position: fixed;
+  position: absolute;
   right: 0;
   left: calc(100% - var(--members-opening-width));
 }

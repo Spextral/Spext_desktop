@@ -15,6 +15,7 @@
         <div
           :class="userIconClass(user.name)"
           :style="userIconStyle(user.icon)"
+          style="border: solid 1px;"
         />
       </div>
       <div class="member-name">{{ user.name }}</div>
